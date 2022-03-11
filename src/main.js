@@ -5,9 +5,8 @@
 
 import path from "path";
 import url from "url";
-import { app, Menu, ipcMain, shell } from "electron";
-import appMenuTemplate from "./menu/app_menu_template";
-import editMenuTemplate from "./menu/edit_menu_template";
+import { app, Menu, ipcMain, shell, systemPreferences } from "electron";
+import {appMenuTemplate, editMenuTemplate} from "./menu/app_menu_template";
 import devMenuTemplate from "./menu/dev_menu_template";
 import createWindow from "./helpers/window";
 
@@ -41,13 +40,18 @@ const initIpc = () => {
   });
 };
 
+systemPreferences.askForMediaAccess("camera").then(()=>systemPreferences.askForMediaAccess("microphone"));
+
 app.on("ready", () => {
   setApplicationMenu();
   initIpc();
 
+
   const mainWindow = createWindow("main", {
     width: 1000,
     height: 600,
+    alwaysOnTop:true,
+
     webPreferences: {
       // Two properties below are here for demo purposes, and are
       // security hazard. Make sure you know what you're doing
@@ -55,21 +59,17 @@ app.on("ready", () => {
       nodeIntegration: true,
       contextIsolation: false,
       // Spectron needs access to remote module
-      enableRemoteModule: env.name === "test"
+      enableRemoteModule: env.name === "test",
     }
   });
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "app.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
+  mainWindow.loadURL('https://meet.google.com');
 
-  if (env.name === "development") {
-    mainWindow.openDevTools();
-  }
+  mainWindow.setOpacity(.90);
+
+  // if (env.name === "development") {
+  //   mainWindow.openDevTools();
+  // }
 });
 
 app.on("window-all-closed", () => {

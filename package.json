@@ -1,7 +1,7 @@
 {
   "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
-  "description": "Starter for your Electron application",
+  "productName": "AOT Browser",
+  "description": "Browser that stays always on top",
   "version": "0.0.0",
   "private": true,
   "author": "Mr. Gumby <mr.gumby@example.com>",
@@ -18,7 +18,15 @@
     "directories": {
       "buildResources": "resources"
     },
-    "publish": null
+    "publish": null,
+    "mac": {
+      "entitlements": "build/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "extendInfo": {
+        "NSCameraUsageDescription": "This app requires camera access to record video.",
+        "NSMicrophoneUsageDescription": "This app requires microphone access to record audio."
+      }
+    }
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -31,6 +39,7 @@
     "release": "npm test && webpack --config=build/webpack.app.config.js --env=production && electron-builder"
   },
   "dependencies": {
+    "electron-prompt": "^1.7.0",
     "fs-jetpack": "^4.1.0"
   },
   "devDependencies": {
